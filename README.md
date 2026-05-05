@@ -1,4 +1,4 @@
-# An SDK written in PHP to work with the NieuwbouwOffice API
+# NieuwbouwOffice PHP SDK
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/concept7/nbo-php-sdk.svg?style=flat-square)](https://packagist.org/packages/concept7/nbo-php-sdk)
 [![Tests](https://img.shields.io/github/actions/workflow/status/concept7/nbo-php-sdk/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/concept7/nbo-php-sdk/actions/workflows/run-tests.yml)
