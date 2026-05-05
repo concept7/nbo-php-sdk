@@ -2,6 +2,7 @@
 
 namespace NieuwbouwOffice\PhpSdk;
 
+use NieuwbouwOffice\PhpSdk\Resources\ProjectResource;
 use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
 use Saloon\Traits\Plugins\AcceptsJson;
@@ -25,5 +26,10 @@ class NieuwbouwOffice extends Connector
     protected function defaultAuth(): TokenAuthenticator
     {
         return new TokenAuthenticator($this->token, 'apikey');
+    }
+
+    public function projects(): ProjectResource
+    {
+        return new ProjectResource($this);
     }
 }
