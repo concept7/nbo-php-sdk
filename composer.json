@@ -16,7 +16,8 @@
         }
     ],
     "require": {
-        "php": "^8.3"
+        "php": "^8.3",
+        "saloonphp/saloon": "^4.0"
     },
     "require-dev": {
         "pestphp/pest": "^4.0",
