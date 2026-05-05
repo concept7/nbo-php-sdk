@@ -1,8 +1,10 @@
 <?php
 
 use NieuwbouwOffice\PhpSdk\NieuwbouwOffice;
+use Saloon\Enums\Method;
 use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
+use Saloon\Http\Request;
 
 it('extends the saloon connector', function () {
     expect(new NieuwbouwOffice('test-token'))->toBeInstanceOf(Connector::class);
@@ -36,8 +38,9 @@ it('authenticates requests with an apikey-prefixed token', function () {
 it('sends the apikey authorization header on outgoing requests', function () {
     $connector = new NieuwbouwOffice('my-secret-token');
 
-    $request = new class extends \Saloon\Http\Request {
-        protected \Saloon\Enums\Method $method = \Saloon\Enums\Method::GET;
+    $request = new class extends Request
+    {
+        protected Method $method = Method::GET;
 
         public function resolveEndpoint(): string
         {
@@ -54,8 +57,9 @@ it('sends the apikey authorization header on outgoing requests', function () {
 it('accepts json by default', function () {
     $connector = new NieuwbouwOffice('test-token');
 
-    $request = new class extends \Saloon\Http\Request {
-        protected \Saloon\Enums\Method $method = \Saloon\Enums\Method::GET;
+    $request = new class extends Request
+    {
+        protected Method $method = Method::GET;
 
         public function resolveEndpoint(): string
         {
