@@ -11,7 +11,7 @@ class ProjectResource extends BaseResource
 {
     public function list(): Response
     {
-        return $this->connector->send(new GetProjectsRequest());
+        return $this->connector->send(new GetProjectsRequest);
     }
 
     public function get(string $uuid): Response
