@@ -1,6 +1,7 @@
 <?php
 
 use NieuwbouwOffice\PhpSdk\NieuwbouwOffice;
+use NieuwbouwOffice\PhpSdk\Resources\ProjectResource;
 use Saloon\Enums\Method;
 use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
@@ -70,4 +71,10 @@ it('accepts json by default', function () {
     $pendingRequest = $connector->createPendingRequest($request);
 
     expect($pendingRequest->headers()->get('Accept'))->toBe('application/json');
+});
+
+it('exposes the projects resource', function () {
+    $connector = new NieuwbouwOffice('test-token');
+
+    expect($connector->projects())->toBeInstanceOf(ProjectResource::class);
 });
