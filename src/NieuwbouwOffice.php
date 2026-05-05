@@ -3,6 +3,7 @@
 namespace NieuwbouwOffice\PhpSdk;
 
 use NieuwbouwOffice\PhpSdk\Resources\ProjectResource;
+use NieuwbouwOffice\PhpSdk\Resources\UnitTypeResource;
 use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
 use Saloon\Traits\Plugins\AcceptsJson;
@@ -31,5 +32,10 @@ class NieuwbouwOffice extends Connector
     public function projects(): ProjectResource
     {
         return new ProjectResource($this);
+    }
+
+    public function unitTypes(string $projectUuid): UnitTypeResource
+    {
+        return new UnitTypeResource($this, $projectUuid);
     }
 }
