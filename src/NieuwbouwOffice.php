@@ -2,6 +2,4 @@
 
 namespace NieuwbouwOffice\PhpSdk;
 
-class NieuwbouwOffice
-{
-}
+class NieuwbouwOffice {}
