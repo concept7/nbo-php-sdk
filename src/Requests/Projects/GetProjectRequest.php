@@ -2,8 +2,10 @@
 
 namespace NieuwbouwOffice\PhpSdk\Requests\Projects;
 
+use NieuwbouwOffice\PhpSdk\Data\Project;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Saloon\Http\Response;
 
 class GetProjectRequest extends Request
 {
@@ -14,5 +16,10 @@ class GetProjectRequest extends Request
     public function resolveEndpoint(): string
     {
         return "/projects/{$this->uuid}/";
+    }
+
+    public function createDtoFromResponse(Response $response): Project
+    {
+        return Project::fromResponse($response->json('data.object'));
     }
 }
