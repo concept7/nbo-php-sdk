@@ -17,7 +17,7 @@ class Project
             uuid: $data['Project_UUId'],
             title: $data['Project_Titel'],
             created_at: $data['Project_Timestamp'],
-            updated_at: $data['Project_Timestamp'],
+            updated_at: $data['Laatst_Bijgewerkt'] ?? $data['Project_Timestamp'],
         );
     }
 }
