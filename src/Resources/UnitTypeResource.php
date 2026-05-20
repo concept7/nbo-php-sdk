@@ -2,11 +2,11 @@
 
 namespace NieuwbouwOffice\PhpSdk\Resources;
 
+use NieuwbouwOffice\PhpSdk\Data\UnitType;
 use NieuwbouwOffice\PhpSdk\Requests\UnitTypes\GetUnitTypeRequest;
 use NieuwbouwOffice\PhpSdk\Requests\UnitTypes\GetUnitTypesRequest;
 use Saloon\Http\BaseResource;
 use Saloon\Http\Connector;
-use Saloon\Http\Response;
 
 class UnitTypeResource extends BaseResource
 {
@@ -17,13 +17,16 @@ class UnitTypeResource extends BaseResource
         parent::__construct($connector);
     }
 
-    public function list(): Response
+    /**
+     * @return UnitType[]
+     */
+    public function list(): array
     {
-        return $this->connector->send(new GetUnitTypesRequest($this->projectUuid));
+        return $this->connector->send(new GetUnitTypesRequest($this->projectUuid))->dto();
     }
 
-    public function get(string $uuid): Response
+    public function get(string $uuid): UnitType
     {
-        return $this->connector->send(new GetUnitTypeRequest($this->projectUuid, $uuid));
+        return $this->connector->send(new GetUnitTypeRequest($this->projectUuid, $uuid))->dto();
     }
 }
