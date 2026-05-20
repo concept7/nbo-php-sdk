@@ -2,6 +2,7 @@
 
 use NieuwbouwOffice\PhpSdk\NieuwbouwOffice;
 use NieuwbouwOffice\PhpSdk\Resources\ProjectResource;
+use NieuwbouwOffice\PhpSdk\Resources\UnitResource;
 use NieuwbouwOffice\PhpSdk\Resources\UnitTypeResource;
 use Saloon\Enums\Method;
 use Saloon\Http\Auth\TokenAuthenticator;
@@ -84,4 +85,10 @@ it('exposes the unit types resource for a project', function () {
     $connector = new NieuwbouwOffice('test-token');
 
     expect($connector->unitTypes('proj-1'))->toBeInstanceOf(UnitTypeResource::class);
+});
+
+it('exposes the units resource for a project', function () {
+    $connector = new NieuwbouwOffice('test-token');
+
+    expect($connector->units('proj-1'))->toBeInstanceOf(UnitResource::class);
 });
