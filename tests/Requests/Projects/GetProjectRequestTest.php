@@ -2,6 +2,7 @@
 
 use Carbon\CarbonImmutable;
 use NieuwbouwOffice\PhpSdk\Data\Project;
+use NieuwbouwOffice\PhpSdk\Enums\ProjectStatus;
 use NieuwbouwOffice\PhpSdk\NieuwbouwOffice;
 use NieuwbouwOffice\PhpSdk\Requests\Projects\GetProjectRequest;
 use Saloon\Enums\Method;
@@ -27,7 +28,6 @@ it('creates a Project DTO from the response', function () {
             'data' => [
                 'object' => [
                     'Project_UUId' => 'e00afb7a1791a22eb8bca3707687c549',
-                    'Project_Id' => '16958',
                     'Project_Parent_UUId' => null,
                     'Project_Ontwikkeling_Datum' => null,
                     'Project_Voorverkoop_Datum' => '2025-12-11',
@@ -99,14 +99,13 @@ it('creates a Project DTO from the response', function () {
 
     expect($project)->toBeInstanceOf(Project::class)
         ->and($project->uuid)->toBe('e00afb7a1791a22eb8bca3707687c549')
-        ->and($project->id)->toBe(16958)
         ->and($project->parent_uuid)->toBeNull()
         ->and($project->title)->toBe('De Suikerzijde')
         ->and($project->municipality)->toBe('Groningen')
         ->and($project->municipality_domain)->toBe('nieuwbouw-groningen.nl')
         ->and($project->city)->toBe('Groningen')
         ->and($project->phase)->toBe('Actueel aanbod')
-        ->and($project->internal_status)->toBe('In verkoop / verhuur')
+        ->and($project->status)->toBe(ProjectStatus::ForSaleOrRent)
         ->and($project->description_html)->toBe('<strong>START PRESALE FASE 2</strong>')
         ->and($project->has_purchase)->toBeTrue()
         ->and($project->has_rental)->toBeFalse()

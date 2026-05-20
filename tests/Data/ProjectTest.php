@@ -2,6 +2,7 @@
 
 use Carbon\CarbonImmutable;
 use NieuwbouwOffice\PhpSdk\Data\Project;
+use NieuwbouwOffice\PhpSdk\Enums\ProjectStatus;
 
 it('exposes its properties as readonly public values', function () {
     $createdAt = CarbonImmutable::parse('2026-01-01T00:00:00Z');
@@ -10,7 +11,6 @@ it('exposes its properties as readonly public values', function () {
 
     $project = new Project(
         uuid: 'abc-123',
-        id: 16958,
         parent_uuid: 'parent-uuid',
         title: 'Project ABC',
         municipality: 'Groningen',
@@ -24,7 +24,7 @@ it('exposes its properties as readonly public values', function () {
         location_description: 'Description',
         location_description_html: '<p>Description</p>',
         phase: 'Actueel aanbod',
-        internal_status: 'In verkoop / verhuur',
+        status: ProjectStatus::ForSaleOrRent,
         reference_number: 'REF-1',
         description: 'Long description',
         description_html: '<p>Long</p>',
@@ -74,7 +74,6 @@ it('exposes its properties as readonly public values', function () {
     );
 
     expect($project->uuid)->toBe('abc-123')
-        ->and($project->id)->toBe(16958)
         ->and($project->parent_uuid)->toBe('parent-uuid')
         ->and($project->title)->toBe('Project ABC')
         ->and($project->municipality)->toBe('Groningen')
@@ -88,7 +87,7 @@ it('exposes its properties as readonly public values', function () {
         ->and($project->location_description)->toBe('Description')
         ->and($project->location_description_html)->toBe('<p>Description</p>')
         ->and($project->phase)->toBe('Actueel aanbod')
-        ->and($project->internal_status)->toBe('In verkoop / verhuur')
+        ->and($project->status)->toBe(ProjectStatus::ForSaleOrRent)
         ->and($project->reference_number)->toBe('REF-1')
         ->and($project->description)->toBe('Long description')
         ->and($project->description_html)->toBe('<p>Long</p>')

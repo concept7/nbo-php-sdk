@@ -3,12 +3,12 @@
 namespace NieuwbouwOffice\PhpSdk\Data;
 
 use Carbon\CarbonImmutable;
+use NieuwbouwOffice\PhpSdk\Enums\ProjectStatus;
 
 class Project
 {
     public function __construct(
         public readonly string $uuid,
-        public readonly ?int $id,
         public readonly ?string $parent_uuid,
         public readonly string $title,
         public readonly ?string $municipality,
@@ -22,7 +22,7 @@ class Project
         public readonly ?string $location_description,
         public readonly ?string $location_description_html,
         public readonly ?string $phase,
-        public readonly ?string $internal_status,
+        public readonly ?ProjectStatus $status,
         public readonly ?string $reference_number,
         public readonly ?string $description,
         public readonly ?string $description_html,
@@ -75,7 +75,6 @@ class Project
     {
         return new self(
             uuid: $data['Project_UUId'],
-            id: self::toInt($data['Project_Id'] ?? null),
             parent_uuid: $data['Project_Parent_UUId'] ?? null,
             title: $data['Project_Titel'],
             municipality: $data['Gemeente'] ?? null,
@@ -89,7 +88,7 @@ class Project
             location_description: $data['Project_Locatie_Beschrijving'] ?? null,
             location_description_html: $data['Project_Locatie_Beschrijving_HTML'] ?? null,
             phase: $data['Project_Fase'] ?? null,
-            internal_status: $data['Project_Status_Intern'] ?? null,
+            status: ProjectStatus::parse($data['Project_Status_Intern'] ?? null),
             reference_number: $data['Project_Referentienummer'] ?? null,
             description: $data['Project_Beschrijving_Lang'] ?? null,
             description_html: $data['Project_Beschrijving_HTML'] ?? null,
