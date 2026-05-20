@@ -88,7 +88,7 @@ class Project
             location_description: $data['Project_Locatie_Beschrijving'] ?? null,
             location_description_html: $data['Project_Locatie_Beschrijving_HTML'] ?? null,
             phase: $data['Project_Fase'] ?? null,
-            status: ProjectStatus::parse($data['Project_Status_Intern'] ?? null),
+            status: isset($data['Project_Status_Intern']) ? ProjectStatus::tryFrom($data['Project_Status_Intern']) : null,
             reference_number: $data['Project_Referentienummer'] ?? null,
             description: $data['Project_Beschrijving_Lang'] ?? null,
             description_html: $data['Project_Beschrijving_HTML'] ?? null,
