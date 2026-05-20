@@ -52,6 +52,39 @@ The connector defaults to the production base URL. Pass a second argument to poi
 $nbo = new NieuwbouwOffice('your-api-token', 'https://staging.nbo.nl/rest');
 ```
 
+## Documentation
+
+### Resources
+
+All resources hang off the `NieuwbouwOffice` connector and return typed DTOs from `NieuwbouwOffice\PhpSdk\Data`.
+
+| Call | HTTP request | Returns |
+|---|---|---|
+| `$nbo->projects()->list()` | `GET /projects/` | `Project[]` |
+| `$nbo->projects()->get($uuid)` | `GET /projects/{uuid}/` | `Project` |
+| `$nbo->unitTypes($projectUuid)->list()` | `GET /projects/{projectUuid}/projectwoningen/` | `UnitType[]` |
+| `$nbo->unitTypes($projectUuid)->get($uuid)` | `GET /projects/{projectUuid}/projectwoningen/{uuid}/` | `UnitType` |
+| `$nbo->units($projectUuid)->list()` | `GET /projects/{projectUuid}/woningen/` | `Unit[]` |
+| `$nbo->units($projectUuid)->get($uuid)` | `GET /projects/{projectUuid}/woningen/{uuid}/` | `Unit` |
+
+Authentication is handled by the connector via an `apikey`-prefixed `Authorization` header — pass your token to the constructor and Saloon takes care of the rest.
+
+### DTO conventions
+
+- **Readonly value objects.** Every DTO in `src/Data/` uses `public readonly` properties; instantiate them via `Project::fromResponse($array)` (which the request classes do for you), then read.
+- **One DTO per resource, list and detail.** Detail-only fields are nullable, so `list()` results return `null` for everything not in the list payload. Look up the full property set in `src/Data/Project.php`, `UnitType.php`, and `Unit.php`.
+- **Casting.** Numeric strings become `int` or `float`; date strings become `Carbon\CarbonImmutable`; the API's `"-1"` / `"0"` booleans become real `bool` (`-1` → `true`, `0` → `false`).
+- **Errors.** The connector uses Saloon's `AlwaysThrowOnErrors` trait, so non-2xx responses raise a `Saloon\Exceptions\Request\RequestException` subclass instead of silently returning.
+
+### Enums
+
+Categorical fields are typed where the value set is known. `tryFrom()` is used internally, so unknown values come through as `null` instead of throwing.
+
+| Enum | Backing | Cases | Used by |
+|---|---|---|---|
+| `NieuwbouwOffice\PhpSdk\Enums\ProjectStatus` | `string` (Dutch label) | 9 | `Project::$status` |
+| `NieuwbouwOffice\PhpSdk\Enums\UnitStatus` | `string` (Dutch label) | 14 | `Unit::$status` |
+
 ## Testing
 
 ```bash
