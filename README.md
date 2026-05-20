@@ -1,7 +1,7 @@
 # NieuwbouwOffice PHP SDK
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/concept7/nbo-php-sdk.svg?style=flat-square)](https://packagist.org/packages/concept7/nbo-php-sdk)
-[![Tests](https://img.shields.io/github/actions/workflow/status/concept7/nbo-php-sdk/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/concept7/nbo-php-sdk/actions/workflows/run-tests.yml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/concept7/nbo-php-sdk/run-tests.yml?branch=0.x&label=tests&style=flat-square)](https://github.com/concept7/nbo-php-sdk/actions/workflows/run-tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/concept7/nbo-php-sdk.svg?style=flat-square)](https://packagist.org/packages/concept7/nbo-php-sdk)
 
 A PHP SDK for the [NieuwbouwOffice](https://nieuwbouwoffice.nl) REST API. Built on [Saloon](https://docs.saloon.dev), it ships typed DTOs and enums for projects, unit types, and units so you can work with the API without touching its Dutch JSON keys.
