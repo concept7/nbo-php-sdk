@@ -2,6 +2,15 @@
 
 All notable changes to `nbo-php-sdk` will be documented in this file.
 
+## 0.0.2 - 2026-05-20
+
+### What's Changed
+
+* Add Media DTO and shared GetMediaRequest by @jhhazelaar in https://github.com/concept7/nbo-php-sdk/pull/12
+* Document the media() methods in the README by @jhhazelaar in https://github.com/concept7/nbo-php-sdk/pull/13
+
+**Full Changelog**: https://github.com/concept7/nbo-php-sdk/compare/0.0.1...0.0.2
+
 ## 0.0.1 - 2026-05-20
 
 ### What's Changed
