@@ -1,35 +1,41 @@
 <?php
 
+use NieuwbouwOffice\PhpSdk\Data\UnitType;
 use NieuwbouwOffice\PhpSdk\NieuwbouwOffice;
 use NieuwbouwOffice\PhpSdk\Requests\UnitTypes\GetUnitTypeRequest;
 use NieuwbouwOffice\PhpSdk\Requests\UnitTypes\GetUnitTypesRequest;
 use NieuwbouwOffice\PhpSdk\Resources\UnitTypeResource;
 use Saloon\Http\Faking\MockClient;
 use Saloon\Http\Faking\MockResponse;
-use Saloon\Http\Response;
 
-it('list() sends a GetUnitTypesRequest scoped to the project and returns the response', function () {
+it('list() sends a GetUnitTypesRequest scoped to the project and returns an array of UnitType DTOs', function () {
     $mockClient = new MockClient([
         GetUnitTypesRequest::class => MockResponse::make([
             'data' => [
-                ['uuid' => 'u1', 'name' => 'Type A'],
-                ['uuid' => 'u2', 'name' => 'Type B'],
+                'objects' => [
+                    [
+                        'Projectwoning_UUId' => 'u1',
+                        'Projectwoning_Titel' => 'Type A',
+                    ],
+                    [
+                        'Projectwoning_UUId' => 'u2',
+                        'Projectwoning_Titel' => 'Type B',
+                    ],
+                ],
             ],
+            'meta' => ['count' => 2],
         ]),
     ]);
 
     $connector = new NieuwbouwOffice('test-token');
     $connector->withMockClient($mockClient);
 
-    $response = $connector->unitTypes('proj-1')->list();
+    $unitTypes = $connector->unitTypes('proj-1')->list();
 
-    expect($response)->toBeInstanceOf(Response::class)
-        ->and($response->json())->toBe([
-            'data' => [
-                ['uuid' => 'u1', 'name' => 'Type A'],
-                ['uuid' => 'u2', 'name' => 'Type B'],
-            ],
-        ]);
+    expect($unitTypes)->toBeArray()->toHaveCount(2)
+        ->and($unitTypes[0])->toBeInstanceOf(UnitType::class)
+        ->and($unitTypes[0]->uuid)->toBe('u1')
+        ->and($unitTypes[1]->uuid)->toBe('u2');
 
     $mockClient->assertSent(function ($request) {
         return $request instanceof GetUnitTypesRequest
@@ -38,24 +44,26 @@ it('list() sends a GetUnitTypesRequest scoped to the project and returns the res
     });
 });
 
-it('get() sends a GetUnitTypeRequest with the right project uuid and uuid', function () {
+it('get() sends a GetUnitTypeRequest with the right project uuid and uuid and returns a UnitType DTO', function () {
     $mockClient = new MockClient([
         GetUnitTypeRequest::class => MockResponse::make([
-            'uuid' => 'unit-9',
-            'name' => 'Type Z',
+            'data' => [
+                'object' => [
+                    'Projectwoning_UUId' => 'unit-9',
+                    'Projectwoning_Titel' => 'Type Z',
+                ],
+            ],
         ]),
     ]);
 
     $connector = new NieuwbouwOffice('test-token');
     $connector->withMockClient($mockClient);
 
-    $response = $connector->unitTypes('proj-1')->get('unit-9');
+    $unitType = $connector->unitTypes('proj-1')->get('unit-9');
 
-    expect($response)->toBeInstanceOf(Response::class)
-        ->and($response->json())->toBe([
-            'uuid' => 'unit-9',
-            'name' => 'Type Z',
-        ]);
+    expect($unitType)->toBeInstanceOf(UnitType::class)
+        ->and($unitType->uuid)->toBe('unit-9')
+        ->and($unitType->title)->toBe('Type Z');
 
     $mockClient->assertSent(function ($request) {
         return $request instanceof GetUnitTypeRequest
