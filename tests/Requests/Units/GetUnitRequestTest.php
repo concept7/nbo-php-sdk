@@ -2,6 +2,7 @@
 
 use Carbon\CarbonImmutable;
 use NieuwbouwOffice\PhpSdk\Data\Unit;
+use NieuwbouwOffice\PhpSdk\Enums\UnitStatus;
 use NieuwbouwOffice\PhpSdk\NieuwbouwOffice;
 use NieuwbouwOffice\PhpSdk\Requests\Units\GetUnitRequest;
 use Saloon\Enums\Method;
@@ -67,7 +68,7 @@ it('creates a Unit DTO from the response', function () {
         ->and($unit->unit_type_uuid)->toBe('dc28a597e2661a3bf7f84737eb1f38c9')
         ->and($unit->construction_number)->toBe('20 - fase 2')
         ->and($unit->is_online)->toBeTrue()
-        ->and($unit->status)->toBe('Verkocht')
+        ->and($unit->status)->toBe(UnitStatus::Sold)
         ->and($unit->is_directly_available)->toBeFalse()
         ->and($unit->tenure)->toBe('Koop')
         ->and($unit->price)->toBe(545800)

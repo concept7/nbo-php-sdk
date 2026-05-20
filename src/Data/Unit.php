@@ -3,6 +3,7 @@
 namespace NieuwbouwOffice\PhpSdk\Data;
 
 use Carbon\CarbonImmutable;
+use NieuwbouwOffice\PhpSdk\Enums\UnitStatus;
 
 class Unit
 {
@@ -12,7 +13,7 @@ class Unit
         public readonly string $construction_number,
         public readonly ?int $order,
         public readonly ?bool $is_online,
-        public readonly ?string $status,
+        public readonly ?UnitStatus $status,
         public readonly ?string $publication_status,
         public readonly ?bool $is_directly_available,
         public readonly ?CarbonImmutable $available_from,
@@ -121,7 +122,7 @@ class Unit
             construction_number: $data['Woning_Bouwnr'],
             order: self::toInt($data['Woning_Volgorde'] ?? null),
             is_online: self::toBool($data['Woning_Online'] ?? null),
-            status: $data['Woning_Status'] ?? null,
+            status: isset($data['Woning_Status']) ? UnitStatus::tryFrom($data['Woning_Status']) : null,
             publication_status: $data['Woning_Publicatiestatus'] ?? null,
             is_directly_available: self::toBool($data['Woning_Direct_Beschikbaar'] ?? null),
             available_from: self::toCarbon($data['Woning_Datum_Beschikbaar'] ?? null),

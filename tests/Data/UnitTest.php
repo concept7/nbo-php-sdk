@@ -2,6 +2,7 @@
 
 use Carbon\CarbonImmutable;
 use NieuwbouwOffice\PhpSdk\Data\Unit;
+use NieuwbouwOffice\PhpSdk\Enums\UnitStatus;
 
 it('exposes its properties as readonly public values', function () {
     $availableFrom = CarbonImmutable::parse('2026-01-15');
@@ -16,7 +17,7 @@ it('exposes its properties as readonly public values', function () {
         construction_number: '20 - fase 2',
         order: 1,
         is_online: true,
-        status: 'Verkocht',
+        status: UnitStatus::Sold,
         publication_status: 'gepubliceerd',
         is_directly_available: false,
         available_from: $availableFrom,
@@ -122,7 +123,7 @@ it('exposes its properties as readonly public values', function () {
         ->and($unit->construction_number)->toBe('20 - fase 2')
         ->and($unit->order)->toBe(1)
         ->and($unit->is_online)->toBeTrue()
-        ->and($unit->status)->toBe('Verkocht')
+        ->and($unit->status)->toBe(UnitStatus::Sold)
         ->and($unit->publication_status)->toBe('gepubliceerd')
         ->and($unit->is_directly_available)->toBeFalse()
         ->and($unit->available_from)->toBe($availableFrom)
