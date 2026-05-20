@@ -1,7 +1,9 @@
 <?php
 
+use NieuwbouwOffice\PhpSdk\Data\Media;
 use NieuwbouwOffice\PhpSdk\Data\Project;
 use NieuwbouwOffice\PhpSdk\NieuwbouwOffice;
+use NieuwbouwOffice\PhpSdk\Requests\Media\GetMediaRequest;
 use NieuwbouwOffice\PhpSdk\Requests\Projects\GetProjectRequest;
 use NieuwbouwOffice\PhpSdk\Requests\Projects\GetProjectsRequest;
 use NieuwbouwOffice\PhpSdk\Resources\ProjectResource;
@@ -70,6 +72,41 @@ it('get() sends a GetProjectRequest with the given uuid and returns a Project DT
         return $request instanceof GetProjectRequest
             && $request->uuid === 'abc-123'
             && $request->resolveEndpoint() === '/projects/abc-123/';
+    });
+});
+
+it('media() sends a GetMediaRequest wrapping a GetProjectRequest and returns an array of Media DTOs', function () {
+    $mockClient = new MockClient([
+        GetMediaRequest::class => MockResponse::make([
+            'data' => [
+                'objects' => [
+                    [
+                        'Media_UUId' => 'm1',
+                        'Media_Filename' => 'a.jpg',
+                        'Media_Extensie' => 'jpg',
+                        'URL' => '//static.nbo.nl/media/m1.jpg',
+                        'Label' => 'Algemeen',
+                        'Volgorde' => '1',
+                        'Media_Timestamp' => '2025-12-02 14:43:30',
+                    ],
+                ],
+            ],
+            'meta' => ['count' => 1],
+        ]),
+    ]);
+
+    $connector = new NieuwbouwOffice('test-token');
+    $connector->withMockClient($mockClient);
+
+    $media = $connector->projects()->media('abc-123');
+
+    expect($media)->toBeArray()->toHaveCount(1)
+        ->and($media[0])->toBeInstanceOf(Media::class)
+        ->and($media[0]->uuid)->toBe('m1');
+
+    $mockClient->assertSent(function ($request) {
+        return $request instanceof GetMediaRequest
+            && $request->resolveEndpoint() === '/projects/abc-123/media/';
     });
 });
 

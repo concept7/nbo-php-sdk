@@ -2,7 +2,9 @@
 
 namespace NieuwbouwOffice\PhpSdk\Resources;
 
+use NieuwbouwOffice\PhpSdk\Data\Media;
 use NieuwbouwOffice\PhpSdk\Data\UnitType;
+use NieuwbouwOffice\PhpSdk\Requests\Media\GetMediaRequest;
 use NieuwbouwOffice\PhpSdk\Requests\UnitTypes\GetUnitTypeRequest;
 use NieuwbouwOffice\PhpSdk\Requests\UnitTypes\GetUnitTypesRequest;
 use Saloon\Http\BaseResource;
@@ -28,5 +30,15 @@ class UnitTypeResource extends BaseResource
     public function get(string $uuid): UnitType
     {
         return $this->connector->send(new GetUnitTypeRequest($this->projectUuid, $uuid))->dto();
+    }
+
+    /**
+     * @return Media[]
+     */
+    public function media(string $uuid): array
+    {
+        return $this->connector
+            ->send(new GetMediaRequest(new GetUnitTypeRequest($this->projectUuid, $uuid)))
+            ->dto();
     }
 }
