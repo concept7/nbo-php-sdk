@@ -4,7 +4,7 @@
 [![Tests](https://img.shields.io/github/actions/workflow/status/concept7/nbo-php-sdk/run-tests.yml?branch=0.x&label=tests&style=flat-square)](https://github.com/concept7/nbo-php-sdk/actions/workflows/run-tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/concept7/nbo-php-sdk.svg?style=flat-square)](https://packagist.org/packages/concept7/nbo-php-sdk)
 
-A PHP SDK for the [NieuwbouwOffice](https://nieuwbouwoffice.nl) REST API. Built on [Saloon](https://docs.saloon.dev), it ships typed DTOs and enums for projects, unit types, and units so you can work with the API without touching its Dutch JSON keys.
+A PHP SDK for the [NieuwbouwOffice](https://nieuwbouwoffice.nl) REST API. Built on [Saloon](https://docs.saloon.dev), it ships typed DTOs and enums for projects, unit types, units, and their media so you can work with the API without touching its Dutch JSON keys.
 
 ## Installation
 
@@ -44,6 +44,16 @@ $units = $nbo->units($project->uuid)->list();
 $unit  = $nbo->units($project->uuid)->get($units[0]->uuid);
 ```
 
+### Media
+
+Every project, unit type, and unit has an attached media collection (photos, plans, etc.). Each resource exposes a `media()` method that returns `Media[]`:
+
+```php
+$projectMedia  = $nbo->projects()->media($project->uuid);
+$unitTypeMedia = $nbo->unitTypes($project->uuid)->media($unitType->uuid);
+$unitMedia     = $nbo->units($project->uuid)->media($unit->uuid);
+```
+
 ### Overriding the base URL
 
 The connector defaults to the production base URL. Pass a second argument to point at a staging or local environment:
@@ -66,13 +76,17 @@ All resources hang off the `NieuwbouwOffice` connector and return typed DTOs fro
 | `$nbo->unitTypes($projectUuid)->get($uuid)` | `GET /projects/{projectUuid}/projectwoningen/{uuid}/` | `UnitType` |
 | `$nbo->units($projectUuid)->list()` | `GET /projects/{projectUuid}/woningen/` | `Unit[]` |
 | `$nbo->units($projectUuid)->get($uuid)` | `GET /projects/{projectUuid}/woningen/{uuid}/` | `Unit` |
+| `$nbo->projects()->media($uuid)` | `GET /projects/{uuid}/media/` | `Media[]` |
+| `$nbo->unitTypes($projectUuid)->media($uuid)` | `GET /projects/{projectUuid}/projectwoningen/{uuid}/media/` | `Media[]` |
+| `$nbo->units($projectUuid)->media($uuid)` | `GET /projects/{projectUuid}/woningen/{uuid}/media/` | `Media[]` |
 
 Authentication is handled by the connector via an `apikey`-prefixed `Authorization` header — pass your token to the constructor and Saloon takes care of the rest.
 
 ### DTO conventions
 
 - **Readonly value objects.** Every DTO in `src/Data/` uses `public readonly` properties; instantiate them via `Project::fromResponse($array)` (which the request classes do for you), then read.
-- **One DTO per resource, list and detail.** Detail-only fields are nullable, so `list()` results return `null` for everything not in the list payload. Look up the full property set in `src/Data/Project.php`, `UnitType.php`, and `Unit.php`.
+- **One DTO per resource, list and detail.** Detail-only fields are nullable, so `list()` results return `null` for everything not in the list payload. Look up the full property set in `src/Data/Project.php`, `UnitType.php`, `Unit.php`, and `Media.php`.
+- **Shared media endpoint.** All three resources reach `/.../media/` through a single decorating `GetMediaRequest` (`src/Requests/Media/GetMediaRequest.php`) that wraps the parent detail request and appends `media/`. The same `Media` DTO is used regardless of which parent the media belongs to.
 - **Casting.** Numeric strings become `int` or `float`; date strings become `Carbon\CarbonImmutable`; the API's `"-1"` / `"0"` booleans become real `bool` (`-1` → `true`, `0` → `false`).
 - **Errors.** The connector uses Saloon's `AlwaysThrowOnErrors` trait, so non-2xx responses raise a `Saloon\Exceptions\Request\RequestException` subclass instead of silently returning.
 
