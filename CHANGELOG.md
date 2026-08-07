@@ -2,6 +2,16 @@
 
 All notable changes to `nbo-php-sdk` will be documented in this file.
 
+## 0.0.3 - 2026-08-07
+
+### What's Changed
+
+* Add `DownloadMediaRequest` for fetching the file a `Media` DTO points at, by @janhenkhazelaar in https://github.com/concept7/nbo-php-sdk/pull/15
+
+The `media()` methods return metadata only. `DownloadMediaRequest` fetches the bytes, normalising the protocol-relative `//static.nbo.nl/...` URLs the API returns. It is a `SoloRequest`, so no API token is sent to the file host.
+
+**Full Changelog**: https://github.com/concept7/nbo-php-sdk/compare/0.0.2...0.0.3
+
 ## 0.0.2 - 2026-05-20
 
 ### What's Changed
