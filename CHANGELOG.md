@@ -2,6 +2,18 @@
 
 All notable changes to `nbo-php-sdk` will be documented in this file.
 
+## 0.1.0 - 2026-10-26
+
+### What's Changed
+
+* Add `AgentResource` for the real estate agents (makelaars) selling a project, by @jhhazelaar in https://github.com/concept7/nbo-php-sdk/pull/16
+
+`$nbo->agents($projectUuid)` returns `Agent` DTOs via `list()` and `get()`, and the agent's logo via `media()`. The list payload carries the company name and visiting address; email, phone, website and the mailing address come with `get()`.
+
+Released as `0.1.0` rather than `0.0.4` so that consumers can use a `^0.1` constraint and pick up patch releases without editing their `composer.json` — Composer treats a caret on a `0.0.x` version as patch-locked.
+
+**Full Changelog**: https://github.com/concept7/nbo-php-sdk/compare/0.0.3...0.1.0
+
 ## 0.0.3 - 2026-08-07
 
 ### What's Changed
