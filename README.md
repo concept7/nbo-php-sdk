@@ -4,7 +4,7 @@
 [![Tests](https://img.shields.io/github/actions/workflow/status/concept7/nbo-php-sdk/run-tests.yml?branch=0.x&label=tests&style=flat-square)](https://github.com/concept7/nbo-php-sdk/actions/workflows/run-tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/concept7/nbo-php-sdk.svg?style=flat-square)](https://packagist.org/packages/concept7/nbo-php-sdk)
 
-A PHP SDK for the [NieuwbouwOffice](https://nieuwbouwoffice.nl) REST API. Built on [Saloon](https://docs.saloon.dev), it ships typed DTOs and enums for projects, unit types, units, and their media so you can work with the API without touching its Dutch JSON keys.
+A PHP SDK for the [NieuwbouwOffice](https://nieuwbouwoffice.nl) REST API. Built on [Saloon](https://docs.saloon.dev), it ships typed DTOs and enums for projects, unit types, units, real estate agents, and their media so you can work with the API without touching its Dutch JSON keys.
 
 ## Installation
 
@@ -44,14 +44,24 @@ $units = $nbo->units($project->uuid)->list();
 $unit  = $nbo->units($project->uuid)->get($units[0]->uuid);
 ```
 
+### Real estate agents
+
+The agents (makelaars) selling a project are scoped to that project too. The list payload carries the company name and visiting address; contact details (`email`, `phone`, `website_url`) and the mailing address only come with `get()`:
+
+```php
+$agents = $nbo->agents($project->uuid)->list();
+$agent  = $nbo->agents($project->uuid)->get($agents[0]->uuid);
+```
+
 ### Media
 
-Every project, unit type, and unit has an attached media collection (photos, plans, etc.). Each resource exposes a `media()` method that returns `Media[]`:
+Every project, unit type, unit, and agent has an attached media collection (photos, plans, etc.). Each resource exposes a `media()` method that returns `Media[]`:
 
 ```php
 $projectMedia  = $nbo->projects()->media($project->uuid);
 $unitTypeMedia = $nbo->unitTypes($project->uuid)->media($unitType->uuid);
 $unitMedia     = $nbo->units($project->uuid)->media($unit->uuid);
+$agentMedia    = $nbo->agents($project->uuid)->media($agent->uuid);
 ```
 
 Those calls return metadata. To fetch the file itself, send a `DownloadMediaRequest`:
@@ -86,17 +96,20 @@ All resources hang off the `NieuwbouwOffice` connector and return typed DTOs fro
 | `$nbo->unitTypes($projectUuid)->get($uuid)` | `GET /projects/{projectUuid}/projectwoningen/{uuid}/` | `UnitType` |
 | `$nbo->units($projectUuid)->list()` | `GET /projects/{projectUuid}/woningen/` | `Unit[]` |
 | `$nbo->units($projectUuid)->get($uuid)` | `GET /projects/{projectUuid}/woningen/{uuid}/` | `Unit` |
+| `$nbo->agents($projectUuid)->list()` | `GET /projects/{projectUuid}/makelaars/` | `Agent[]` |
+| `$nbo->agents($projectUuid)->get($uuid)` | `GET /projects/{projectUuid}/makelaars/{uuid}/` | `Agent` |
 | `$nbo->projects()->media($uuid)` | `GET /projects/{uuid}/media/` | `Media[]` |
 | `$nbo->unitTypes($projectUuid)->media($uuid)` | `GET /projects/{projectUuid}/projectwoningen/{uuid}/media/` | `Media[]` |
 | `$nbo->units($projectUuid)->media($uuid)` | `GET /projects/{projectUuid}/woningen/{uuid}/media/` | `Media[]` |
+| `$nbo->agents($projectUuid)->media($uuid)` | `GET /projects/{projectUuid}/makelaars/{uuid}/media/` | `Media[]` |
 
 Authentication is handled by the connector via an `apikey`-prefixed `Authorization` header — pass your token to the constructor and Saloon takes care of the rest.
 
 ### DTO conventions
 
 - **Readonly value objects.** Every DTO in `src/Data/` uses `public readonly` properties; instantiate them via `Project::fromResponse($array)` (which the request classes do for you), then read.
-- **One DTO per resource, list and detail.** Detail-only fields are nullable, so `list()` results return `null` for everything not in the list payload. Look up the full property set in `src/Data/Project.php`, `UnitType.php`, `Unit.php`, and `Media.php`.
-- **Shared media endpoint.** All three resources reach `/.../media/` through a single decorating `GetMediaRequest` (`src/Requests/Media/GetMediaRequest.php`) that wraps the parent detail request and appends `media/`. The same `Media` DTO is used regardless of which parent the media belongs to.
+- **One DTO per resource, list and detail.** Detail-only fields are nullable, so `list()` results return `null` for everything not in the list payload. Look up the full property set in `src/Data/Project.php`, `UnitType.php`, `Unit.php`, `Agent.php`, and `Media.php`.
+- **Shared media endpoint.** All four resources reach `/.../media/` through a single decorating `GetMediaRequest` (`src/Requests/Media/GetMediaRequest.php`) that wraps the parent detail request and appends `media/`. The same `Media` DTO is used regardless of which parent the media belongs to.
 - **Downloads bypass the connector.** `DownloadMediaRequest` (`src/Requests/Media/DownloadMediaRequest.php`) is a `SoloRequest` that fetches `Media::$url` directly, normalising protocol-relative URLs to `https`. It deliberately carries no authentication, since the file host is not the API.
 - **Casting.** Numeric strings become `int` or `float`; date strings become `Carbon\CarbonImmutable`; the API's `"-1"` / `"0"` booleans become real `bool` (`-1` → `true`, `0` → `false`).
 - **Errors.** The connector uses Saloon's `AlwaysThrowOnErrors` trait, so non-2xx responses raise a `Saloon\Exceptions\Request\RequestException` subclass instead of silently returning.
