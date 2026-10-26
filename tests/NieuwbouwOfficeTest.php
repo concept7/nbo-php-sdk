@@ -1,6 +1,7 @@
 <?php
 
 use NieuwbouwOffice\PhpSdk\NieuwbouwOffice;
+use NieuwbouwOffice\PhpSdk\Resources\AgentResource;
 use NieuwbouwOffice\PhpSdk\Resources\ProjectResource;
 use NieuwbouwOffice\PhpSdk\Resources\UnitResource;
 use NieuwbouwOffice\PhpSdk\Resources\UnitTypeResource;
@@ -91,4 +92,10 @@ it('exposes the units resource for a project', function () {
     $connector = new NieuwbouwOffice('test-token');
 
     expect($connector->units('proj-1'))->toBeInstanceOf(UnitResource::class);
+});
+
+it('exposes the agents resource for a project', function () {
+    $connector = new NieuwbouwOffice('test-token');
+
+    expect($connector->agents('proj-1'))->toBeInstanceOf(AgentResource::class);
 });

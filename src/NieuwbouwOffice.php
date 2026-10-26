@@ -2,6 +2,7 @@
 
 namespace NieuwbouwOffice\PhpSdk;
 
+use NieuwbouwOffice\PhpSdk\Resources\AgentResource;
 use NieuwbouwOffice\PhpSdk\Resources\ProjectResource;
 use NieuwbouwOffice\PhpSdk\Resources\UnitResource;
 use NieuwbouwOffice\PhpSdk\Resources\UnitTypeResource;
@@ -43,5 +44,10 @@ class NieuwbouwOffice extends Connector
     public function units(string $projectUuid): UnitResource
     {
         return new UnitResource($this, $projectUuid);
+    }
+
+    public function agents(string $projectUuid): AgentResource
+    {
+        return new AgentResource($this, $projectUuid);
     }
 }
